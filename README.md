@@ -7,6 +7,7 @@ recruiter contacts, and outcomes.
 
 In development. The MVP supports dashboard statistics, searching and filtering,
 application CRUD, Supabase persistence, and private anonymous sessions.
+It also includes a local Job Description Match Analyser.
 
 ## Technology
 
@@ -62,6 +63,34 @@ only select, insert, update, or delete their own rows.
 On a user's first authenticated visit, six fictional applications are inserted if
 the account has no records. Completion is stored in Supabase auth metadata so the
 sample records do not return after a user deliberately deletes everything.
+
+## Job Description Match Analyser
+
+The analyser compares pasted resume/profile text with a pasted job description
+entirely in the browser. Neither text field is uploaded, persisted to Supabase, or
+sent to an external API.
+
+The deterministic keyword library is grouped into:
+
+- Data and Analytics
+- Finance and Banking
+- Business and Product
+- Compliance and Risk
+- Professional Skills
+
+Text is normalised for case, punctuation, and excess spacing. Common aliases such
+as `PowerBI`/`Power BI`, `UIUX`/`UI/UX`/`user experience`, and
+`CRM`/`customer relationship management` resolve to one displayed keyword. Exact
+normalised words and phrases are used to avoid partial-word matches.
+
+Only recognised keywords found in the job description are scored:
+
+```text
+match percentage = matched relevant keywords / recognised job-description keywords * 100
+```
+
+The result is a transparent vocabulary comparison, not a measure of candidate
+suitability, experience quality, or likelihood of receiving an interview.
 
 ## Author
 

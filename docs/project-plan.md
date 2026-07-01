@@ -31,6 +31,20 @@ and review progress from one dashboard.
 - Interview and offer counts
 - Responsive application table
 
+### Job Description Match Analyser
+
+- Locally compare resume/profile text with a pasted job description
+- Detect case-insensitive keywords across Data and Analytics, Finance and Banking,
+  Business and Product, Compliance and Risk, and Professional Skills
+- Support aliases such as PowerBI, UI/UX, and customer relationship management
+- Show matched and missing terms grouped by category
+- Calculate `matched relevant keywords / recognised job-description keywords * 100`
+- Keep all pasted text in browser memory without storage or external API calls
+
+The analyser is deterministic and transparent. It highlights vocabulary overlap
+only and does not determine candidate suitability or understand experience in the
+way a human reviewer would.
+
 ### Persistence and Security
 
 - Supabase PostgreSQL CRUD through a typed service layer
@@ -67,11 +81,13 @@ deletion.
 - Supabase CRUD and anonymous authentication
 - Per-user Row Level Security
 - One-time starter-data initialization
+- Local Job Description Match Analyser with category breakdowns
 
 ### Next
 
 - Automated tests
 - Sorting and expanded dashboard insights
+- Expand and maintain the transparent keyword library
 - CSV export
 - Deadline reminders
 - Optional permanent account upgrade

@@ -5,6 +5,7 @@ import { ApplicationModal } from './components/ApplicationModal'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Sidebar } from './components/Sidebar'
 import { SummaryCard } from './components/SummaryCard'
+import { MatchAnalyser } from './features/matcher/MatchAnalyser'
 import { useApplications } from './hooks/useApplications'
 import type { ApplicationFormValues, ApplicationStatus, InternshipApplication } from './types/application'
 import './App.css'
@@ -182,6 +183,8 @@ function App() {
             actionsDisabled={isSaving || deletingId !== null}
           />
         </section>
+
+        <MatchAnalyser />
       </main>
 
       {(isAdding || editingApplication) && (

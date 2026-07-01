@@ -19,6 +19,12 @@ export function Sidebar() {
           </svg>
           Applications
         </a>
+        <a className="nav-link" href="#match-analyser">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 19 19 5M8 5H5v3m11 11h3v-3M9 15l2 2 4-5" />
+          </svg>
+          Match Analyser
+        </a>
       </nav>
 
       <div className="sidebar-footer">
