@@ -4,9 +4,11 @@ interface ConfirmDialogProps {
   company: string
   onConfirm: () => void
   onCancel: () => void
+  isDeleting: boolean
+  error: string | null
 }
 
-export function ConfirmDialog({ company, onConfirm, onCancel }: ConfirmDialogProps) {
+export function ConfirmDialog({ company, onConfirm, onCancel, isDeleting, error }: ConfirmDialogProps) {
   const cancelRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -23,10 +25,11 @@ export function ConfirmDialog({ company, onConfirm, onCancel }: ConfirmDialogPro
       <div className="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-description">
         <div className="danger-icon" aria-hidden="true">!</div>
         <h2 id="confirm-title">Delete application?</h2>
-        <p id="confirm-description">The application for <strong>{company}</strong> will be permanently removed from this browser.</p>
+        <p id="confirm-description">The application for <strong>{company}</strong> will be permanently removed from your account.</p>
+        {error && <div className="operation-error" role="alert">{error}</div>}
         <div className="confirm-actions">
-          <button ref={cancelRef} className="button button--secondary" type="button" onClick={onCancel}>Keep application</button>
-          <button className="button button--danger" type="button" onClick={onConfirm}>Delete</button>
+          <button ref={cancelRef} className="button button--secondary" type="button" onClick={onCancel} disabled={isDeleting}>Keep application</button>
+          <button className="button button--danger" type="button" onClick={onConfirm} disabled={isDeleting}>{isDeleting ? 'Deleting…' : 'Delete'}</button>
         </div>
       </div>
     </div>

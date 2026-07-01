@@ -7,8 +7,10 @@ import {
 
 interface ApplicationFormProps {
   application?: InternshipApplication
-  onSubmit: (values: ApplicationFormValues) => void
+  onSubmit: (values: ApplicationFormValues) => Promise<void>
   onCancel: () => void
+  isSaving: boolean
+  submitError: string | null
 }
 
 type FormErrors = Partial<Record<keyof ApplicationFormValues, string>>
@@ -44,7 +46,7 @@ function validate(values: ApplicationFormValues): FormErrors {
   return errors
 }
 
-export function ApplicationForm({ application, onSubmit, onCancel }: ApplicationFormProps) {
+export function ApplicationForm({ application, onSubmit, onCancel, isSaving, submitError }: ApplicationFormProps) {
   const [values, setValues] = useState<ApplicationFormValues>(() => application ? {
     company: application.company,
     role: application.role,
@@ -64,13 +66,13 @@ export function ApplicationForm({ application, onSubmit, onCancel }: Application
     setErrors((current) => ({ ...current, [field]: undefined }))
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const nextErrors = validate(values)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
 
-    onSubmit({
+    await onSubmit({
       ...values,
       company: values.company.trim(),
       role: values.role.trim(),
@@ -86,6 +88,7 @@ export function ApplicationForm({ application, onSubmit, onCancel }: Application
 
   return (
     <form className="application-form" onSubmit={handleSubmit} noValidate>
+      {submitError && <div className="operation-error" role="alert">{submitError}</div>}
       <div className="form-grid">
         <label className="form-field">
           <span>Company name <b aria-hidden="true">*</b></span>
@@ -135,8 +138,10 @@ export function ApplicationForm({ application, onSubmit, onCancel }: Application
         </label>
       </div>
       <footer className="form-actions">
-        <button className="button button--secondary" type="button" onClick={onCancel}>Cancel</button>
-        <button className="button button--primary" type="submit">{application ? 'Save changes' : 'Add application'}</button>
+        <button className="button button--secondary" type="button" onClick={onCancel} disabled={isSaving}>Cancel</button>
+        <button className="button button--primary" type="submit" disabled={isSaving}>
+          {isSaving ? 'Saving…' : application ? 'Save changes' : 'Add application'}
+        </button>
       </footer>
     </form>
   )

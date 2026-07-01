@@ -6,6 +6,7 @@ interface ApplicationsTableProps {
   hasStoredApplications: boolean
   onEdit: (application: InternshipApplication) => void
   onDelete: (application: InternshipApplication) => void
+  actionsDisabled: boolean
 }
 
 const dateFormatter = new Intl.DateTimeFormat('en-SG', {
@@ -19,7 +20,7 @@ function formatDate(date: string | null) {
   return dateFormatter.format(new Date(`${date}T00:00:00`))
 }
 
-export function ApplicationsTable({ applications, hasStoredApplications, onEdit, onDelete }: ApplicationsTableProps) {
+export function ApplicationsTable({ applications, hasStoredApplications, onEdit, onDelete, actionsDisabled }: ApplicationsTableProps) {
   if (applications.length === 0) {
     return (
       <div className="empty-state">
@@ -62,8 +63,8 @@ export function ApplicationsTable({ applications, hasStoredApplications, onEdit,
                       View
                     </a>
                   )}
-                  <button type="button" onClick={() => onEdit(application)}>Edit</button>
-                  <button className="delete-action" type="button" onClick={() => onDelete(application)}>Delete</button>
+                  <button type="button" disabled={actionsDisabled} onClick={() => onEdit(application)}>Edit</button>
+                  <button className="delete-action" type="button" disabled={actionsDisabled} onClick={() => onDelete(application)}>Delete</button>
                 </div>
               </td>
             </tr>

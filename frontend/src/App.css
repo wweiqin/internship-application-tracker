@@ -68,6 +68,7 @@ h1 { margin: 0; color: var(--navy); font-size: clamp(28px, 3vw, 36px); line-heig
 .button--secondary:hover { background: #f7f9fb; }
 .button--danger { color: white; background: #c64242; }
 .button--danger:hover { background: #ae3434; }
+.button:disabled, .row-actions button:disabled { cursor: not-allowed; opacity: .58; }
 .add-button span { font-size: 18px; font-weight: 400; line-height: 0; }
 .toolbar { display: flex; gap: 13px; padding: 0 25px 20px; }
 .search-field { position: relative; flex: 1; max-width: 430px; }
@@ -125,6 +126,7 @@ tbody tr:hover { background: #fbfcfe; }
 .form-field input[aria-invalid="true"] { border-color: #d25b5b; }
 .form-field--wide { grid-column: 1 / -1; }
 .field-error { color: #b33d3d; font-size: 10px; font-weight: 600; }
+.operation-error { margin-bottom: 17px; padding: 10px 12px; border: 1px solid #f0caca; border-radius: 8px; color: #983737; background: #fff1f1; font-size: 11px; line-height: 1.45; }
 .form-actions { position: sticky; bottom: 0; display: flex; justify-content: flex-end; gap: 10px; margin: 23px -26px 0; padding: 17px 26px; border-top: 1px solid var(--border); background: white; }
 
 .modal-backdrop--confirm { z-index: 110; }
@@ -132,10 +134,18 @@ tbody tr:hover { background: #fbfcfe; }
 .danger-icon { display: grid; place-items: center; width: 43px; height: 43px; margin: 0 auto 15px; border-radius: 50%; color: #b43e3e; background: #fceaea; font-size: 20px; font-weight: 800; }
 .confirm-dialog p { margin: 0 auto 23px; max-width: 330px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .confirm-dialog p strong { color: #3c485b; }
+.confirm-dialog .operation-error { margin-top: -10px; }
 .confirm-actions { display: flex; justify-content: center; gap: 10px; }
 
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(.99); } }
+
+.connection-state { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; background: #f4f7fb; text-align: center; }
+.connection-state h1 { margin: 18px 0 8px; font-size: 25px; }
+.connection-state p { max-width: 460px; margin: 0 0 22px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.loading-spinner { width: 38px; height: 38px; border: 3px solid #d8e4f4; border-top-color: var(--blue); border-radius: 50%; animation: spin .75s linear infinite; }
+.connection-error-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: #ad3c3c; background: #fbe7e7; font-size: 20px; font-weight: 800; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 1050px) {
   .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

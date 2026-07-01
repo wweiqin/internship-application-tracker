@@ -5,7 +5,7 @@ import { ApplicationModal } from './components/ApplicationModal'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { Sidebar } from './components/Sidebar'
 import { SummaryCard } from './components/SummaryCard'
-import { useLocalApplications } from './hooks/useLocalApplications'
+import { useApplications } from './hooks/useApplications'
 import type { ApplicationFormValues, ApplicationStatus, InternshipApplication } from './types/application'
 import './App.css'
 
@@ -21,7 +21,18 @@ const statusOptions: Array<ApplicationStatus | 'All statuses'> = [
 ]
 
 function App() {
-  const { applications, addApplication, updateApplication, deleteApplication } = useLocalApplications()
+  const {
+    applications,
+    loadState,
+    error,
+    isSaving,
+    deletingId,
+    retry,
+    clearError,
+    addApplication,
+    updateApplication,
+    deleteApplication,
+  } = useApplications()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'All statuses'>(
     'All statuses',
@@ -30,13 +41,13 @@ function App() {
   const [editingApplication, setEditingApplication] = useState<InternshipApplication | null>(null)
   const [deletingApplication, setDeletingApplication] = useState<InternshipApplication | null>(null)
 
-  function handleFormSubmit(values: ApplicationFormValues) {
+  async function handleFormSubmit(values: ApplicationFormValues) {
     if (editingApplication) {
-      updateApplication(editingApplication.id, values)
-      setEditingApplication(null)
+      const saved = await updateApplication(editingApplication.id, values)
+      if (saved) setEditingApplication(null)
     } else {
-      addApplication(values)
-      setIsAdding(false)
+      const saved = await addApplication(values)
+      if (saved) setIsAdding(false)
     }
   }
 
@@ -69,6 +80,27 @@ function App() {
   const offerCount = applications.filter(
     (application) => application.status === 'Offer',
   ).length
+
+  if (loadState === 'authenticating' || loadState === 'loading') {
+    return (
+      <main className="connection-state" aria-live="polite">
+        <div className="loading-spinner" aria-hidden="true" />
+        <h1>{loadState === 'authenticating' ? 'Securing your workspace' : 'Loading applications'}</h1>
+        <p>{loadState === 'authenticating' ? 'Creating a private anonymous session…' : 'Syncing your internship pipeline…'}</p>
+      </main>
+    )
+  }
+
+  if (loadState === 'error') {
+    return (
+      <main className="connection-state">
+        <div className="connection-error-icon" aria-hidden="true">!</div>
+        <h1>We couldn’t load your workspace</h1>
+        <p>{error ?? 'Check your connection and try again.'}</p>
+        <button className="button button--primary" type="button" onClick={retry}>Try again</button>
+      </main>
+    )
+  }
 
   return (
     <div className="app-shell">
@@ -107,7 +139,7 @@ function App() {
             </div>
             <div className="panel-actions">
               <span className="record-count">{filteredApplications.length} records</span>
-              <button className="button button--primary add-button" type="button" onClick={() => setIsAdding(true)}>
+              <button className="button button--primary add-button" type="button" disabled={isSaving || deletingId !== null} onClick={() => { clearError(); setIsAdding(true) }}>
                 <span aria-hidden="true">+</span> Add application
               </button>
             </div>
@@ -146,7 +178,8 @@ function App() {
             applications={filteredApplications}
             hasStoredApplications={applications.length > 0}
             onEdit={setEditingApplication}
-            onDelete={setDeletingApplication}
+            onDelete={(application) => { clearError(); setDeletingApplication(application) }}
+            actionsDisabled={isSaving || deletingId !== null}
           />
         </section>
       </main>
@@ -155,12 +188,14 @@ function App() {
         <ApplicationModal
           title={editingApplication ? 'Edit application' : 'Add application'}
           description={editingApplication ? 'Update the details for this opportunity.' : 'Add an opportunity to your internship pipeline.'}
-          onClose={() => { setIsAdding(false); setEditingApplication(null) }}
+          onClose={() => { if (!isSaving) { clearError(); setIsAdding(false); setEditingApplication(null) } }}
         >
           <ApplicationForm
             application={editingApplication ?? undefined}
             onSubmit={handleFormSubmit}
-            onCancel={() => { setIsAdding(false); setEditingApplication(null) }}
+            onCancel={() => { clearError(); setIsAdding(false); setEditingApplication(null) }}
+            isSaving={isSaving}
+            submitError={error}
           />
         </ApplicationModal>
       )}
@@ -168,10 +203,12 @@ function App() {
       {deletingApplication && (
         <ConfirmDialog
           company={deletingApplication.company}
-          onCancel={() => setDeletingApplication(null)}
-          onConfirm={() => {
-            deleteApplication(deletingApplication.id)
-            setDeletingApplication(null)
+          isDeleting={deletingId === deletingApplication.id}
+          error={error}
+          onCancel={() => { clearError(); setDeletingApplication(null) }}
+          onConfirm={async () => {
+            const deleted = await deleteApplication(deletingApplication.id)
+            if (deleted) setDeletingApplication(null)
           }}
         />
       )}

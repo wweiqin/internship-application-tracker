@@ -1,8 +1,7 @@
-import type { InternshipApplication } from '../types/application'
+import type { ApplicationFormValues } from '../types/application'
 
-export const applications: InternshipApplication[] = [
+export const applications: ApplicationFormValues[] = [
   {
-    id: 1,
     company: 'Straits Digital Bank',
     role: 'Product Analyst Intern',
     status: 'Interview',
@@ -15,7 +14,6 @@ export const applications: InternshipApplication[] = [
     notes: 'First-round interview with the product team.',
   },
   {
-    id: 2,
     company: 'Meridian Pay',
     role: 'Software Engineering Intern',
     status: 'Online Assessment',
@@ -28,7 +26,6 @@ export const applications: InternshipApplication[] = [
     notes: 'Complete the coding assessment by Friday.',
   },
   {
-    id: 3,
     company: 'Northstar Capital',
     role: 'Risk Analytics Intern',
     status: 'Applied',
@@ -41,7 +38,6 @@ export const applications: InternshipApplication[] = [
     notes: '',
   },
   {
-    id: 4,
     company: 'NexLedger',
     role: 'Business Operations Intern',
     status: 'Offer',
@@ -54,7 +50,6 @@ export const applications: InternshipApplication[] = [
     notes: 'Offer response requested within one week.',
   },
   {
-    id: 5,
     company: 'Atlas Markets',
     role: 'Data Analyst Intern',
     status: 'Interested',
@@ -67,7 +62,6 @@ export const applications: InternshipApplication[] = [
     notes: 'Review the analytics stack before applying.',
   },
   {
-    id: 6,
     company: 'Clearwater Finance',
     role: 'Compliance Intern',
     status: 'Rejected',

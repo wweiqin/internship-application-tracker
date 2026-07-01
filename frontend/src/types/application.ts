@@ -9,6 +9,7 @@ export type ApplicationStatus =
 
 export interface InternshipApplication {
   id: number
+  userId: string
   company: string
   role: string
   status: ApplicationStatus
@@ -19,9 +20,14 @@ export interface InternshipApplication {
   contactName: string
   contactEmail: string
   notes: string
+  createdAt: string
+  updatedAt: string
 }
 
-export type ApplicationFormValues = Omit<InternshipApplication, 'id'>
+export type ApplicationFormValues = Omit<
+  InternshipApplication,
+  'id' | 'userId' | 'createdAt' | 'updatedAt'
+>
 
 export const applicationStatuses: ApplicationStatus[] = [
   'Interested',
