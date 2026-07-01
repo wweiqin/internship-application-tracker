@@ -1,7 +1,11 @@
 import type { InternshipApplication } from '../types/application'
+import { StatusBadge } from './StatusBadge'
 
 interface ApplicationsTableProps {
   applications: InternshipApplication[]
+  hasStoredApplications: boolean
+  onEdit: (application: InternshipApplication) => void
+  onDelete: (application: InternshipApplication) => void
 }
 
 const dateFormatter = new Intl.DateTimeFormat('en-SG', {
@@ -15,12 +19,13 @@ function formatDate(date: string | null) {
   return dateFormatter.format(new Date(`${date}T00:00:00`))
 }
 
-export function ApplicationsTable({ applications }: ApplicationsTableProps) {
+export function ApplicationsTable({ applications, hasStoredApplications, onEdit, onDelete }: ApplicationsTableProps) {
   if (applications.length === 0) {
     return (
       <div className="empty-state">
-        <strong>No applications found</strong>
-        <p>Try changing your search or status filter.</p>
+        <div className="empty-state-icon" aria-hidden="true">{hasStoredApplications ? '⌕' : '+'}</div>
+        <strong>{hasStoredApplications ? 'No applications found' : 'Your application list is empty'}</strong>
+        <p>{hasStoredApplications ? 'Try changing your search or status filter.' : 'Add an application to start tracking your internship search.'}</p>
       </div>
     )
   }
@@ -36,7 +41,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
             <th>Application date</th>
             <th>Deadline</th>
             <th>Location</th>
-            <th><span className="sr-only">Job link</span></th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -45,26 +50,21 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               <td><strong className="company-name">{application.company}</strong></td>
               <td>{application.role}</td>
               <td>
-                <span className={`status-badge status-badge--${application.status.toLowerCase().replace(' ', '-')}`}>
-                  {application.status}
-                </span>
+                <StatusBadge status={application.status} />
               </td>
               <td>{formatDate(application.applicationDate)}</td>
               <td>{formatDate(application.deadline)}</td>
               <td>{application.location}</td>
               <td>
-                <a
-                  className="job-link"
-                  href={application.jobLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Open ${application.company} job listing`}
-                >
-                  View
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M7 17 17 7m-7 0h7v7" />
-                  </svg>
-                </a>
+                <div className="row-actions">
+                  {application.jobLink && (
+                    <a className="job-link" href={application.jobLink} target="_blank" rel="noreferrer" aria-label={`Open ${application.company} job listing`}>
+                      View
+                    </a>
+                  )}
+                  <button type="button" onClick={() => onEdit(application)}>Edit</button>
+                  <button className="delete-action" type="button" onClick={() => onDelete(application)}>Delete</button>
+                </div>
               </td>
             </tr>
           ))}

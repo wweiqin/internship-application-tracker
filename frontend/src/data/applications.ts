@@ -10,6 +10,9 @@ export const applications: InternshipApplication[] = [
     deadline: '2026-07-08',
     location: 'Singapore',
     jobLink: 'https://example.com/straits-digital-bank',
+    contactName: 'Amelia Lim',
+    contactEmail: 'amelia.lim@example.com',
+    notes: 'First-round interview with the product team.',
   },
   {
     id: 2,
@@ -20,6 +23,9 @@ export const applications: InternshipApplication[] = [
     deadline: '2026-07-12',
     location: 'Singapore',
     jobLink: 'https://example.com/meridian-pay',
+    contactName: '',
+    contactEmail: '',
+    notes: 'Complete the coding assessment by Friday.',
   },
   {
     id: 3,
@@ -30,6 +36,9 @@ export const applications: InternshipApplication[] = [
     deadline: '2026-07-15',
     location: 'Hong Kong',
     jobLink: 'https://example.com/northstar-capital',
+    contactName: 'Daniel Wong',
+    contactEmail: 'daniel.wong@example.com',
+    notes: '',
   },
   {
     id: 4,
@@ -40,6 +49,9 @@ export const applications: InternshipApplication[] = [
     deadline: '2026-06-20',
     location: 'Singapore',
     jobLink: 'https://example.com/nexledger',
+    contactName: 'Priya Nair',
+    contactEmail: 'priya.nair@example.com',
+    notes: 'Offer response requested within one week.',
   },
   {
     id: 5,
@@ -50,6 +62,9 @@ export const applications: InternshipApplication[] = [
     deadline: '2026-07-21',
     location: 'Remote',
     jobLink: 'https://example.com/atlas-markets',
+    contactName: '',
+    contactEmail: '',
+    notes: 'Review the analytics stack before applying.',
   },
   {
     id: 6,
@@ -60,5 +75,8 @@ export const applications: InternshipApplication[] = [
     deadline: '2026-06-16',
     location: 'Singapore',
     jobLink: 'https://example.com/clearwater-finance',
+    contactName: '',
+    contactEmail: '',
+    notes: '',
   },
 ]

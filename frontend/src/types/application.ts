@@ -13,7 +13,22 @@ export interface InternshipApplication {
   role: string
   status: ApplicationStatus
   applicationDate: string | null
-  deadline: string
+  deadline: string | null
   location: string
   jobLink: string
+  contactName: string
+  contactEmail: string
+  notes: string
 }
+
+export type ApplicationFormValues = Omit<InternshipApplication, 'id'>
+
+export const applicationStatuses: ApplicationStatus[] = [
+  'Interested',
+  'Applied',
+  'Online Assessment',
+  'Interview',
+  'Offer',
+  'Rejected',
+  'Withdrawn',
+]

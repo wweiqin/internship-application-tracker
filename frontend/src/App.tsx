@@ -1,9 +1,12 @@
 import { useMemo, useState } from 'react'
 import { ApplicationsTable } from './components/ApplicationsTable'
+import { ApplicationForm } from './components/ApplicationForm'
+import { ApplicationModal } from './components/ApplicationModal'
+import { ConfirmDialog } from './components/ConfirmDialog'
 import { Sidebar } from './components/Sidebar'
 import { SummaryCard } from './components/SummaryCard'
-import { applications } from './data/applications'
-import type { ApplicationStatus } from './types/application'
+import { useLocalApplications } from './hooks/useLocalApplications'
+import type { ApplicationFormValues, ApplicationStatus, InternshipApplication } from './types/application'
 import './App.css'
 
 const statusOptions: Array<ApplicationStatus | 'All statuses'> = [
@@ -18,10 +21,24 @@ const statusOptions: Array<ApplicationStatus | 'All statuses'> = [
 ]
 
 function App() {
+  const { applications, addApplication, updateApplication, deleteApplication } = useLocalApplications()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'All statuses'>(
     'All statuses',
   )
+  const [isAdding, setIsAdding] = useState(false)
+  const [editingApplication, setEditingApplication] = useState<InternshipApplication | null>(null)
+  const [deletingApplication, setDeletingApplication] = useState<InternshipApplication | null>(null)
+
+  function handleFormSubmit(values: ApplicationFormValues) {
+    if (editingApplication) {
+      updateApplication(editingApplication.id, values)
+      setEditingApplication(null)
+    } else {
+      addApplication(values)
+      setIsAdding(false)
+    }
+  }
 
   const filteredApplications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase()
@@ -35,7 +52,7 @@ function App() {
 
       return matchesSearch && matchesStatus
     })
-  }, [searchTerm, statusFilter])
+  }, [applications, searchTerm, statusFilter])
 
   const activeStatuses: ApplicationStatus[] = [
     'Interested',
@@ -57,7 +74,7 @@ function App() {
     <div className="app-shell">
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content" id="top">
         <header className="page-header">
           <div>
             <p className="eyebrow">Overview</p>
@@ -88,7 +105,12 @@ function App() {
               <h2>Applications</h2>
               <p>Review and manage your internship pipeline.</p>
             </div>
-            <span className="record-count">{filteredApplications.length} records</span>
+            <div className="panel-actions">
+              <span className="record-count">{filteredApplications.length} records</span>
+              <button className="button button--primary add-button" type="button" onClick={() => setIsAdding(true)}>
+                <span aria-hidden="true">+</span> Add application
+              </button>
+            </div>
           </div>
 
           <div className="toolbar">
@@ -120,9 +142,39 @@ function App() {
             </label>
           </div>
 
-          <ApplicationsTable applications={filteredApplications} />
+          <ApplicationsTable
+            applications={filteredApplications}
+            hasStoredApplications={applications.length > 0}
+            onEdit={setEditingApplication}
+            onDelete={setDeletingApplication}
+          />
         </section>
       </main>
+
+      {(isAdding || editingApplication) && (
+        <ApplicationModal
+          title={editingApplication ? 'Edit application' : 'Add application'}
+          description={editingApplication ? 'Update the details for this opportunity.' : 'Add an opportunity to your internship pipeline.'}
+          onClose={() => { setIsAdding(false); setEditingApplication(null) }}
+        >
+          <ApplicationForm
+            application={editingApplication ?? undefined}
+            onSubmit={handleFormSubmit}
+            onCancel={() => { setIsAdding(false); setEditingApplication(null) }}
+          />
+        </ApplicationModal>
+      )}
+
+      {deletingApplication && (
+        <ConfirmDialog
+          company={deletingApplication.company}
+          onCancel={() => setDeletingApplication(null)}
+          onConfirm={() => {
+            deleteApplication(deletingApplication.id)
+            setDeletingApplication(null)
+          }}
+        />
+      )}
     </div>
   )
 }
