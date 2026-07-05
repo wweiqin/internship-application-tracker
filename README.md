@@ -3,6 +3,8 @@
 A responsive web application for managing internship applications, deadlines,
 recruiter contacts, and outcomes.
 
+**Live application:** https://internship-application-tracker-five.vercel.app
+
 ## Project Status
 
 In development. The MVP supports dashboard statistics, searching and filtering,
@@ -45,6 +47,13 @@ It also includes a local Job Description Match Analyser.
 
 3. Enable anonymous sign-ins in Supabase Authentication.
 
+   To let anonymous users protect their tracker with email, also enable manual
+   identity linking and add both the local URL and deployed Vercel URL to the Auth
+   redirect allow list:
+
+   - `http://localhost:5173`
+   - `https://internship-application-tracker-five.vercel.app`
+
 4. Run `database/schema.sql` in the Supabase SQL editor to create the table,
    indexes, update trigger, grants, and Row Level Security policies.
 
@@ -53,6 +62,25 @@ It also includes a local Job Description Match Analyser.
    ```bash
    npm run dev
    ```
+
+## Quality Checks
+
+Run these commands from `frontend/` before committing changes:
+
+```bash
+npm run test
+npm run lint
+npm run build
+```
+
+`npm run test:watch` keeps the automated tests running while matcher logic is
+being developed.
+
+## Deployment
+
+The frontend is deployed on Vercel. Production uses the same two Vite environment
+variables described above, configured in the Vercel project rather than committed
+to Git. Deployments build from the `frontend/` application.
 
 ## Data and Security
 
@@ -63,6 +91,11 @@ only select, insert, update, or delete their own rows.
 On a user's first authenticated visit, six fictional applications are inserted if
 the account has no records. Completion is stored in Supabase auth metadata so the
 sample records do not return after a user deliberately deletes everything.
+
+Anonymous users can link an email without changing their Supabase user ID, so their
+existing application rows remain attached. After verification, they can request a
+passwordless email link on another device. Signing into a different existing
+account does not merge records from the temporary anonymous session.
 
 ## Job Description Match Analyser
 

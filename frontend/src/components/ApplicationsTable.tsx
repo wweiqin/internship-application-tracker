@@ -20,6 +20,15 @@ function formatDate(date: string | null) {
   return dateFormatter.format(new Date(`${date}T00:00:00`))
 }
 
+function hasRealJobLink(jobLink: string): boolean {
+  if (!jobLink) return false
+  try {
+    return new URL(jobLink).hostname !== 'example.com'
+  } catch {
+    return false
+  }
+}
+
 export function ApplicationsTable({ applications, hasStoredApplications, onEdit, onDelete, actionsDisabled }: ApplicationsTableProps) {
   if (applications.length === 0) {
     return (
@@ -58,7 +67,7 @@ export function ApplicationsTable({ applications, hasStoredApplications, onEdit,
               <td>{application.location}</td>
               <td>
                 <div className="row-actions">
-                  {application.jobLink && (
+                  {hasRealJobLink(application.jobLink) && (
                     <a className="job-link" href={application.jobLink} target="_blank" rel="noreferrer" aria-label={`Open ${application.company} job listing`}>
                       View
                     </a>

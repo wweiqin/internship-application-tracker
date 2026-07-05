@@ -22,3 +22,22 @@ export function ensureAnonymousSession(): Promise<User> {
 
   return authenticationPromise
 }
+
+export async function linkEmailToAnonymousUser(email: string): Promise<void> {
+  const { error } = await supabase.auth.updateUser(
+    { email },
+    { emailRedirectTo: window.location.origin },
+  )
+  if (error) throw error
+}
+
+export async function sendEmailSignInLink(email: string): Promise<void> {
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: false,
+      emailRedirectTo: window.location.origin,
+    },
+  })
+  if (error) throw error
+}

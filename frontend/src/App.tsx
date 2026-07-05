@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ApplicationsTable } from './components/ApplicationsTable'
+import { AccountAccess } from './components/AccountAccess'
 import { ApplicationForm } from './components/ApplicationForm'
 import { ApplicationModal } from './components/ApplicationModal'
 import { ConfirmDialog } from './components/ConfirmDialog'
@@ -24,6 +25,7 @@ const statusOptions: Array<ApplicationStatus | 'All statuses'> = [
 function App() {
   const {
     applications,
+    user,
     loadState,
     error,
     isSaving,
@@ -116,14 +118,16 @@ function App() {
               Track opportunities, deadlines, and progress in one place.
             </p>
           </div>
-          <div className="profile" aria-label="Signed in profile">
-            <span className="profile-avatar" aria-hidden="true">WQ</span>
-            <span>
-              <strong>Wei Qin</strong>
-              <small>Internship search</small>
-            </span>
+          <div className="session-indicator" aria-label="Data protection status">
+            <span aria-hidden="true">✓</span>
+            <div>
+              <strong>Private workspace</strong>
+              <small>Protected by Supabase RLS</small>
+            </div>
           </div>
         </header>
+
+        <AccountAccess user={user} />
 
         <section className="summary-grid" aria-label="Application summary">
           <SummaryCard label="Total applications" value={applications.length} tone="blue" />

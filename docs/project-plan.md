@@ -49,6 +49,7 @@ way a human reviewer would.
 
 - Supabase PostgreSQL CRUD through a typed service layer
 - Anonymous authentication without a registration screen
+- Optional email linking and passwordless cross-device sign-in
 - Row Level Security limiting access to rows owned by `auth.uid()`
 - Six fictional starter records initialized once for new anonymous users
 
@@ -82,10 +83,17 @@ deletion.
 - Per-user Row Level Security
 - One-time starter-data initialization
 - Local Job Description Match Analyser with category breakdowns
+- Automated matcher utility and UI component tests
+- Mocked Supabase application-service CRUD and mapping tests
+- Anonymous-authentication session, retry, and Strict Mode tests
+- Application-form validation, submission, edit, saving, and error-state tests
+- Account-access UI and anonymous-to-email-linking tests
+- Vercel production deployment
+- Production anonymous-authentication and Supabase CRUD smoke test
 
 ### Next
 
-- Automated tests
+- Portfolio screenshots and final README presentation pass
 - Sorting and expanded dashboard insights
 - Expand and maintain the transparent keyword library
 - CSV export

@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js'
 import { useCallback, useEffect, useState } from 'react'
 import { ensureAnonymousSession } from '../services/auth'
 import {
@@ -17,6 +18,7 @@ function errorMessage(error: unknown): string {
 export function useApplications() {
   const [applications, setApplications] = useState<InternshipApplication[]>([])
   const [userId, setUserId] = useState<string | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loadState, setLoadState] = useState<LoadState>('authenticating')
   const [error, setError] = useState<string | null>(null)
   const [retryCount, setRetryCount] = useState(0)
@@ -33,6 +35,7 @@ export function useApplications() {
         const user = await ensureAnonymousSession()
         if (!isCurrent) return
         setUserId(user.id)
+        setUser(user)
         setLoadState('loading')
         const loadedApplications = await initializeApplications(user)
         if (!isCurrent) return
@@ -99,6 +102,7 @@ export function useApplications() {
 
   return {
     applications,
+    user,
     loadState,
     error,
     isSaving,
